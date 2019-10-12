@@ -3,45 +3,35 @@ package org.nrepl;
 import clojure.java.api.Clojure;
 import clojure.lang.IFn;
 
-public final class App {
-    private static Object server;
-    private static int lifetime;
+public class App {
+    public static App instance;
+    private Object server;
 
-    private App() {
-    }
-
-    public static Object startServer(int port) {
-        IFn require = Clojure.var("clojure.core", "require");
-        require.invoke(Clojure.read("nrepl.server"));
+    public App(int port, Object handler) {
         IFn start = Clojure.var("nrepl.server", "start-server");
-        return start.invoke(Clojure.read(":port"), Clojure.read(Integer.toString(port)));
+        server = start.invoke(
+            Clojure.read(":port"), Clojure.read(Integer.toString(port)),
+            Clojure.read(":handler"), handler);
+        System.out.println("nrepl server started on port " + port);
     }
 
-    public static void shutdown() {
+    public App(int port) {
+        this(port, Clojure.var("nrepl.server", "default-handler").invoke());
+    }
+
+    public void shutdown() {
         if (server != null) {
-            IFn require = Clojure.var("clojure.core", "require");
-            require.invoke(Clojure.read("nrepl.server"));
             IFn stop = Clojure.var("nrepl.server", "stop-server");
             stop.invoke(server);
         }
         System.exit(0);
     }
 
-    public static int getLifetime() {
-        return lifetime;
-    }
-
     public static void main(String[] args) {
+        System.out.println("nREPL server example");
+        IFn require = Clojure.var("clojure.core", "require");
+        require.invoke(Clojure.read("nrepl.server"));
         int port = 7888;
-        server = startServer(port);
-        System.out.println("nrepl server started on port " + port);
-        while (true) {
-            try {
-                Thread.sleep(1000);
-                lifetime += 1;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        instance = new App(port);
     }
 }

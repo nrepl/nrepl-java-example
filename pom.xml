@@ -21,8 +21,14 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
                 <configuration>
-                    <mainClass>org.nrepl.App</mainClass>
+                    <mainClass>org.nrepl.AppWithCustomMiddleware</mainClass>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.theoryinpractise</groupId>
+                <artifactId>clojure-maven-plugin</artifactId>
+                <version>1.8.3</version>
+                <extensions>true</extensions>
             </plugin>
         </plugins>
     </build>

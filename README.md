@@ -11,7 +11,7 @@ This project contains a simple example of how to embed [nREPL](https://github.co
 
 Open a terminal and run:
 
-    mvn exec:java
+    mvn clojure:compile exec:java
 
 You should see a message saying that nrepl is started on port 7888. Next, open another terminal and run:
 
@@ -21,5 +21,4 @@ This will create a client connection to the nrepl server.
 
 Once connected, you can interact with the running application via the Clojure REPL. Some things to try:
 
-- `(org.nrepl.App/getLifetime)` will tell you how many seconds the app has been running
-- `(org.nrepl.App/shutdown)` will shutdown the nrepl server (and disconnect your client)
+- `(.shutdown org.nrepl.App/instance)` will shutdown the nrepl server (and disconnect your client)
